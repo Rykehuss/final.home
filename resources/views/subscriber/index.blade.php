@@ -2,12 +2,12 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">SUBSCRIBERS</div>
                     <div class="panel-body">
-                        {{ link_to_route('subscriber.create', 'Create', null, ['class' => 'btn btn-info btn-xs']) }}
-                        <table class="table table-bordered table-responsive table-striped">
+                        {{ link_to_route('subscriber.create', 'Create', $bunch_id, ['class' => 'btn btn-info btn-xs']) }}
+                        <table class="table table-bordered table-responsive table-striped table-hover">
                             <tr>
                                 <th width="10%">id</th>
                                 <th width="20%">Name</th>
@@ -25,17 +25,17 @@
                                 </td>
                             </tr>
                             @foreach ($subscribers as $model)
-                                <tr onclick="document.location = '{{"subscriber/".$model->id}}'">
+                                <tr class="as-link clickable_row" link="{{"bunch/{$bunch_id}/subscriber/{$model->id}"}}">
                                     <td>{{$model->id}}</td>
                                     <td>{{$model->name}}</td>
                                     <td>{{$model->surname}}</td>
                                     <td>{{$model->email}}</td>
                                     <td>{{$model->bunches->count()}}</td>
                                     <td>
-                                        {{Form::open(['class' => 'confirm-delete', 'route' => ['subscriber.destroy', $model->id],
+                                        {{Form::open(['class' => 'confirm-delete', 'route' => ['subscriber.destroy', $bunch_id, $model],
                                         'method' => 'DELETE'])}}
-                                        {{ link_to_route('subscriber.show', 'Info', [$model], ['class' => 'btn btn-info btn-xs']) }}
-                                        {{ link_to_route('subscriber.edit', 'Edit', [$model], ['class' => 'btn btn-success btn-xs']) }}
+                                        {{ link_to_route('subscriber.show', 'Info', [$bunch_id, $model], ['class' => 'btn btn-info btn-xs']) }}
+                                        {{ link_to_route('subscriber.edit', 'Edit', [$bunch_id, $model], ['class' => 'btn btn-success btn-xs']) }}
                                         {{Form::button('Delete', ['class' => 'btn btn-danger btn-xs', 'type' => 'submit'])}}
                                         {{Form::close()}}
                                     </td>

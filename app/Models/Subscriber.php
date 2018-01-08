@@ -9,6 +9,7 @@ class Subscriber extends Model
 {
     use AsList;
     use Boot;
+    use CreatedUpdated;
 
     protected $fillable = [
         'name',

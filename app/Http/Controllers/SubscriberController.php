@@ -14,32 +14,39 @@ class SubscriberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($bunch_id)
     {
-        $subscribers = Subscriber::orderBy('id', 'asc')->get();
-        return view('subscriber.index', compact('subscribers'));
+        $subscribers = Subscriber::orderBy('id', 'asc')->owned()->get();
+        return view('subscriber.index', compact('bunch_id', 'subscribers'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param int $bunch_id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($bunch_id)
     {
-        return view('subscriber.create');
+        return view('subscriber.create', compact('bunch_id'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\SubscriberRequest  $request
+     * @param int $bunch_id
      * @return \Illuminate\Http\Response
      */
-    public function store(SubscriberRequest $request)
+    public function store(SubscriberRequest $request, $bunch_id)
     {
-        Subscriber::create($request->all());
-        return redirect()->route('subscriber.index');
+        $subscriber = Subscriber::create($request->all());
+        if ($bunch_id) {
+            $subscriber->bunches()->attach($bunch_id);
+            $bunch = Bunch::find($bunch_id);
+            return redirect()->route('bunch.editSubscribers', compact('bunch'));
+        }
+        return redirect()->route('subscriber.index', compact('bunch_id'));
     }
 
     /**
@@ -48,9 +55,9 @@ class SubscriberController extends Controller
      * @param  Subscriber $subscriber
      * @return \Illuminate\Http\Response
      */
-    public function show(Subscriber $subscriber)
+    public function show($bunch_id, Subscriber $subscriber)
     {
-        return view('subscriber.show', compact('subscriber'));
+        return view('subscriber.show', compact('bunch_id', 'subscriber'));
     }
 
     /**
@@ -59,9 +66,10 @@ class SubscriberController extends Controller
      * @param  Subscriber $subscriber
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subscriber $subscriber)
+    public function edit($bunch_id, Subscriber $subscriber)
     {
-        return view('subscriber.edit', compact('subscriber'));
+//        dd($subscriber);
+        return view('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
 
     /**
@@ -71,10 +79,14 @@ class SubscriberController extends Controller
      * @param  \App\Http\Requests\SubscriberRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Subscriber $subscriber, SubscriberRequest $request)
+    public function update($bunch_id, Subscriber $subscriber, SubscriberRequest $request)
     {
         $subscriber->update($request->all());
-        return redirect()->route('subscriber.index');
+        if ($bunch_id) {
+            $bunch = Bunch::find($bunch_id);
+            return redirect()->route('bunch.editSubscribers', compact('bunch'));
+        }
+        return redirect()->route('subscriber.index', compact('bunch_id'));
     }
 
     /**
@@ -83,10 +95,20 @@ class SubscriberController extends Controller
      * @param  Subscriber $subscriber
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subscriber $subscriber)
+    public function destroy($bunch_id, Subscriber $subscriber)
     {
+        $bunches = $subscriber->bunches;
+        if ($bunches->count()) {
+            foreach ($bunches as $bunch) {
+                $subscriber->bunches()->detach($bunch->id);
+            }
+        }
         $subscriber->delete();
-        return redirect()->route('subscriber.index');
+        if ($bunch_id) {
+            $bunch = Bunch::find($bunch_id);
+            return redirect()->route('bunch.editSubscribers', compact('bunch'));
+        }
+        return redirect()->route('subscriber.index', compact('bunch_id'));
     }
 
     /**
@@ -96,10 +118,10 @@ class SubscriberController extends Controller
      * @param  Bunch    $bunch
      * @return \Illuminate\Http\Response
      */
-    public function removeFromBunch(Subscriber $subscriber, Bunch $bunch)
+    public function removeFromBunch($bunch_id, Subscriber $subscriber, Bunch $bunch)
     {
         $subscriber->bunches()->detach($bunch->id);
-        return view('subscriber.edit', compact('subscriber'));
+        return redirect()->route('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
 
     /**
@@ -109,9 +131,9 @@ class SubscriberController extends Controller
      * @param  \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\Response
      */
-    public function addToBunch(Subscriber $subscriber, Request $request)
+    public function addToBunch($bunch_id, Subscriber $subscriber, Request $request)
     {
         $subscriber->bunches()->attach($request->input('bunch_id'));
-        return view('subscriber.edit', compact('subscriber'));
+        return redirect()->route('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
 }

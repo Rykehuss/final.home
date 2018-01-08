@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -46,8 +47,9 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                            <li><a href="{{ url('/campaign') }}">Campaigns</a></li>
                             <li><a href="{{ url('/template') }}">Templates</a></li>
-                            <li><a href="{{ url('/subscriber') }}">Subscribers</a></li>
+                            <li><a href="{{ url('/bunch/0/subscriber') }}">Subscribers</a></li>
                             <li><a href="{{ url('/bunch') }}">Bunches</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
@@ -84,7 +86,31 @@
     <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
     <script>
         $('textarea').ckeditor();
-        // $('.textarea').ckeditor(); // if class is prefered.
+
+        $(".subscriber-delete").on("submit", function(){
+            return confirm("Do you want to delete this subscriber?\n" +
+                "This will delete it from DB and all linked bunches!\n" +
+                "If you want just delete subscriber from current bunch use Remove button instead.");
+        });
+
+        $(".confirm-delete").on("submit", function(){
+            return confirm("Do you want to delete this item?");
+        });
+
+        $(".confirm-send").on("submit", function(){
+            return confirm("Do you want to send emails to all subscribers from chosen list?");
+        });
+
+        $('.as-link').on('click', 'td', function(){
+            var parent = $(this).parent();
+            var last = parent.children().index(parent.find("td:last"));
+            var col = parent.children().index($(this));
+            if (col != last) {
+                var link = parent.attr('link');
+                // alert(link);
+                window.location.href = link;
+            }
+        })
     </script>
 </body>
 </html>

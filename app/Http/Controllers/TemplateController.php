@@ -14,7 +14,7 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::orderBy('id', 'asc')->get();
+        $templates = Template::orderBy('id', 'asc')->owned()->get();
         return view('template.index', compact('templates'));
     }
 

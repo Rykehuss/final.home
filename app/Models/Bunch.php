@@ -9,6 +9,7 @@ class Bunch extends Model
 {
     use Boot;
     use AsList;
+    use CreatedUpdated;
 
     protected $fillable = [
         'name',
@@ -17,6 +18,10 @@ class Bunch extends Model
 
     public function subscribers(){
         return $this->belongsToMany(Subscriber::class);
+    }
+
+    public function campaigns(){
+        return $this->hasMany(Campaign::class);
     }
 
     public function scopeOwned($query){

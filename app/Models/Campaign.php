@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Template extends Model
+class Campaign extends Model
 {
     use Boot;
     use AsList;
@@ -13,11 +13,17 @@ class Template extends Model
 
     protected $fillable = [
         'name',
-        'content',
+        'description',
+        'bunch_id',
+        'template_id'
     ];
 
-    public function campaigns(){
-        return $this->hasMany(Campaign::class);
+    public function bunch(){
+        return $this->belongsTo(Bunch::class);
+    }
+
+    public function template(){
+        return $this->belongsTo(Template::class);
     }
 
     public function scopeOwned($query){

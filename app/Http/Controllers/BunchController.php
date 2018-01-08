@@ -17,7 +17,7 @@ class BunchController extends Controller
      */
     public function index()
     {
-        $bunches = Bunch::orderBy('id', 'asc')->get();
+        $bunches = Bunch::orderBy('id', 'asc')->owned()->get();
         return view('bunch.index', compact('bunches'));
     }
 
@@ -66,6 +66,22 @@ class BunchController extends Controller
     }
 
     /**
+     * Show the form for subscribers editing.
+     *
+     * @param  Bunch    $bunch
+     * @return \Illuminate\Http\Response
+     */
+    public function editSubscribers($bunch_id)
+    {
+//        dd($bunch_id);
+        if ($bunch_id == 0) {
+            return redirect()->route('subscriber.index', compact('bunch_id'));
+        }
+        $bunch = Bunch::find($bunch_id);
+        return view('bunch.edit_subscribers', compact('bunch'));
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  Bunch    $bunch
@@ -74,9 +90,8 @@ class BunchController extends Controller
      */
     public function update(Bunch $bunch, BunchRequest $request)
     {
-        dd($request);
-//        $bunch->update($request->all());
-//        return redirect()->route('bunch.index');
+        $bunch->update($request->all());
+        return redirect()->route('bunch.index');
     }
 
     /**
@@ -87,6 +102,12 @@ class BunchController extends Controller
      */
     public function destroy(Bunch $bunch)
     {
+        $subscribers = $bunch->subscribers;
+        if ($subscribers->count()) {
+            foreach ($subscribers as $subscriber) {
+                $bunch->subscribers()->detach($subscriber->id);
+            }
+        }
         $bunch->delete();
         return redirect()->route('bunch.index');
     }
@@ -101,7 +122,7 @@ class BunchController extends Controller
     public function removeSubscriber(Bunch $bunch, Subscriber $subscriber)
     {
         $bunch->subscribers()->detach($subscriber->id);
-        return view('bunch.edit', compact('bunch'));
+        return redirect()->route('bunch.editSubscribers', compact('bunch'));
     }
 
     /**
@@ -114,6 +135,6 @@ class BunchController extends Controller
     public function addSubscriber(Bunch $bunch, Request $request)
     {
         $bunch->subscribers()->attach($request->input('subscriber_id'));
-        return view('bunch.edit', compact('bunch'));
+        return redirect()->route('bunch.editSubscribers', compact('bunch'));
     }
 }
