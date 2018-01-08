@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Session;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +50,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof AuthorizationException) {
+//            echo strpos($request->getRequestUri(), 'template');
+//            die();
+            if(strpos($request->getRequestUri(), 'template') != FALSE) {
+                Session::flash('error', 'This action is unauthorized');
+                return redirect()->route('template.index');
+            }
+        }
         return parent::render($request, $exception);
     }
 }
