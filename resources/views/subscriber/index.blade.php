@@ -6,6 +6,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">SUBSCRIBERS</div>
                     <div class="panel-body">
+
+                        @if(Session::has('error'))
+                            <div class="alert alert-danger">
+                                {{ Session::get('error') }}
+                            </div>
+                        @endif
+
                         {{ link_to_route('subscriber.create', 'Create', $bunch_id, ['class' => 'btn btn-info btn-xs']) }}
                         <table class="table table-bordered table-responsive table-striped table-hover">
                             <tr>

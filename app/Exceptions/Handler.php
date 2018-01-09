@@ -59,9 +59,9 @@ class Handler extends ExceptionHandler
             else if(strpos($requestUri, 'campaign') != FALSE) {
                 return redirect()->route('campaign.index');
             }
-//            else if (strpos($requestUri, 'bunch/0/subscriber') != FALSE) {
-//                return redirect()->route('bunch.editSubscribers', 0);
-//            }
+            else if (strpos($requestUri, 'bunch/0/subscriber') != FALSE) {
+                return redirect()->route('subscriber.index', 0);
+            }
             else if(strpos($requestUri, 'bunch') != FALSE) {
                 return redirect()->route('bunch.index');
             }

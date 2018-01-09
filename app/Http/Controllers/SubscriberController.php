@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class SubscriberController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Subscriber::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -120,6 +125,7 @@ class SubscriberController extends Controller
      */
     public function removeFromBunch($bunch_id, Subscriber $subscriber, Bunch $bunch)
     {
+        $this->authorize('update', $subscriber);
         $subscriber->bunches()->detach($bunch->id);
         return redirect()->route('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
@@ -133,6 +139,7 @@ class SubscriberController extends Controller
      */
     public function addToBunch($bunch_id, Subscriber $subscriber, Request $request)
     {
+        $this->authorize('update', $subscriber);
         $subscriber->bunches()->attach($request->input('bunch_id'));
         return redirect()->route('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
