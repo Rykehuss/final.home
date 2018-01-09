@@ -32,7 +32,7 @@
                                 </td>
                             </tr>
                             @foreach ($subscribers as $model)
-                                <tr class="as-link clickable_row" link="{{"bunch/{$bunch_id}/subscriber/{$model->id}"}}">
+                                <tr class="as-link clickable_row" link="{!! route('subscriber.show', [$bunch_id, $model]) !!}">
                                     <td>{{$model->id}}</td>
                                     <td>{{$model->name}}</td>
                                     <td>{{$model->surname}}</td>
