@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Session;
 
 class CampaignController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Campaign::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -63,6 +68,7 @@ class CampaignController extends Controller
      */
     public function preview(Campaign $campaign)
     {
+        $this->authorize('view', $campaign);
         return view('campaign.preview', compact('campaign'));
     }
 
@@ -110,6 +116,7 @@ class CampaignController extends Controller
      */
     public function send(Campaign $campaign, Request $request)
     {
+        $this->authorize('send', $campaign);
         foreach ($campaign->bunch->subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(new CampaignMail($campaign, $subscriber));
         }

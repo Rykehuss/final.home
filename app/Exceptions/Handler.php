@@ -51,11 +51,13 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if($exception instanceof AuthorizationException) {
-//            echo strpos($request->getRequestUri(), 'template');
-//            die();
-            if(strpos($request->getRequestUri(), 'template') != FALSE) {
-                Session::flash('error', 'This action is unauthorized');
+            Session::flash('error', 'This action is unauthorized');
+            $requestUri = $request->getRequestUri();
+            if(strpos($requestUri, 'template') != FALSE) {
                 return redirect()->route('template.index');
+            }
+            else if(strpos($requestUri, 'campaign') != FALSE) {
+                return redirect()->route('campaign.index');
             }
         }
         return parent::render($request, $exception);
