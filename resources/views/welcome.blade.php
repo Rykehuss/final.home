@@ -5,12 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel Final Exercise</title>
+        <title>MailSender</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
         <style>
             html, body {
                 background-color: #fff;
@@ -67,10 +69,9 @@
     <body>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
-                <div class="top-right links">
+                <div class="top-right links navbar-header">
                     @auth
-                        <a href="{{ url('/template') }}">Templates</a>
-                        <a href="{{ url('/subscriber') }}">Subscribers</a>
+                        <a href="{{ url('/home') }}">Home</a>
                     @else
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>
@@ -80,15 +81,14 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    MailSender
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="{{ url('/campaign') }}">Campaigns</a>
+                    <a href="{{ url('/template') }}">Templates</a>
+                    <a href="{{ url('/bunch') }}">Bunches</a>
+                    <a href="{{ url('/bunch/0/subscriber') }}">Subscribers</a>
                 </div>
             </div>
         </div>

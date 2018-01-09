@@ -30,7 +30,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'MailSender') }}
                     </a>
                 </div>
 
@@ -49,8 +49,8 @@
                         @else
                             <li><a href="{{ url('/campaign') }}">Campaigns</a></li>
                             <li><a href="{{ url('/template') }}">Templates</a></li>
-                            <li><a href="{{ url('/bunch/0/subscriber') }}">Subscribers</a></li>
                             <li><a href="{{ url('/bunch') }}">Bunches</a></li>
+                            <li><a href="{{ url('/bunch/0/subscriber') }}">Subscribers</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                     {{ Auth::user()->name }} <span class="caret"></span>
