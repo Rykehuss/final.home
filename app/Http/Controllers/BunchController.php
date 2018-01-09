@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Session;
 
 class BunchController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Bunch::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -74,10 +79,10 @@ class BunchController extends Controller
      */
     public function editSubscribers($bunch_id)
     {
-//        dd($bunch_id);
         if ($bunch_id == 0) {
             return redirect()->route('subscriber.index', compact('bunch_id'));
         }
+        $this->authorize('update', Bunch::find($bunch_id));
         $bunch = Bunch::find($bunch_id);
         if ($bunch) {
             return view('bunch.edit_subscribers', compact('bunch'));
@@ -128,6 +133,7 @@ class BunchController extends Controller
      */
     public function removeSubscriber(Bunch $bunch, Subscriber $subscriber)
     {
+        $this->authorize('update', $bunch);
         $bunch->subscribers()->detach($subscriber->id);
         return redirect()->route('bunch.editSubscribers', compact('bunch'));
     }
@@ -141,6 +147,7 @@ class BunchController extends Controller
      */
     public function addSubscriber(Bunch $bunch, Request $request)
     {
+        $this->authorize('update', $bunch);
         $bunch->subscribers()->attach($request->input('subscriber_id'));
         return redirect()->route('bunch.editSubscribers', compact('bunch'));
     }
