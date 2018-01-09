@@ -7,6 +7,7 @@ use App\Http\Requests\BunchRequest;
 use App\Models\Subscriber;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class BunchController extends Controller
 {
@@ -78,7 +79,13 @@ class BunchController extends Controller
             return redirect()->route('subscriber.index', compact('bunch_id'));
         }
         $bunch = Bunch::find($bunch_id);
-        return view('bunch.edit_subscribers', compact('bunch'));
+        if ($bunch) {
+            return view('bunch.edit_subscribers', compact('bunch'));
+        }
+        else {
+            Session::flash('error', "Bunch with id {$bunch_id} not exist");
+            return redirect()->route('bunch.index');
+        }
     }
 
     /**
