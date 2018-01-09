@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class Bunch extends Model
@@ -10,6 +11,7 @@ class Bunch extends Model
     use Boot;
     use AsList;
     use CreatedUpdated;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

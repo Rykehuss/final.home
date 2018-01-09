@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Template extends Model
 {
     use Boot;
     use AsList;
     use CreatedUpdated;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
