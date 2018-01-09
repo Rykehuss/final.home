@@ -25,6 +25,8 @@ class CampaignRequest extends FormRequest
     {
         return [
             'name' => 'required|max:200',
+            'bunch_id' => 'required',
+            'template_id' => 'required',
         ];
     }
 }

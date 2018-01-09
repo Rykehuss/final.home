@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Template;
 use App\Http\Requests\TemplateRequest;
+use Illuminate\Support\Facades\Session;
 
 class TemplateController extends Controller
 {
@@ -88,7 +89,14 @@ class TemplateController extends Controller
      */
     public function destroy(Template $template)
     {
-        $template->delete();
-        return redirect()->route('template.index');
+        if ($template->campaigns->count() == 0) {
+
+            $template->delete();
+            return redirect()->route('template.index');
+        }
+        else {
+            Session::flash('error', "You can't delete template while it used in campaign!");
+            return redirect()->route('template.index');
+        }
     }
 }

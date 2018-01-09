@@ -114,14 +114,20 @@ class BunchController extends Controller
      */
     public function destroy(Bunch $bunch)
     {
-        $subscribers = $bunch->subscribers;
-        if ($subscribers->count()) {
-            foreach ($subscribers as $subscriber) {
-                $bunch->subscribers()->detach($subscriber->id);
+        if ($bunch->campaigns->count() == 0) {
+            $subscribers = $bunch->subscribers;
+            if ($subscribers->count()) {
+                foreach ($subscribers as $subscriber) {
+                    $bunch->subscribers()->detach($subscriber->id);
+                }
             }
+            $bunch->delete();
+            return redirect()->route('bunch.index');
         }
-        $bunch->delete();
-        return redirect()->route('bunch.index');
+        else {
+            Session::flash('error', "You can't delete bunch while it used in campaign!");
+            return redirect()->route('bunch.index');
+        }
     }
 
     /**
