@@ -21,7 +21,13 @@
     </tr>
     <tr align="center" valign="top" bgcolor="#000000">
         <td align="center" valign="middle" style="padding: 20px 0;">
-            {!! $campaign->template->content !!}
+            <?php
+                $content = $campaign->template->content;
+                $content = str_replace('{F_NAME}', $subscriber->name, $content);
+                $content = str_replace('{L_NAME}', $subscriber->surname, $content);
+//                $content = str_replace('{UNSUBSCRIBE}', $subscriber->surname, $content);
+            ?>
+            {!! $content !!}
         </td>
     </tr>
     <tr>

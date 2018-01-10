@@ -8,6 +8,7 @@ use App\Http\Requests\CampaignRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Config;
 
 class CampaignController extends Controller
 {
@@ -116,9 +117,18 @@ class CampaignController extends Controller
      */
     public function send(Campaign $campaign, Request $request)
     {
+        $mailsInBatch = config('custom.mails_in_batch');
+        $batchDelay = config('custom.batch_delay');
+
         $this->authorize('send', $campaign);
-        foreach ($campaign->bunch->subscribers as $subscriber) {
-            Mail::to($subscriber->email)->send(new CampaignMail($campaign, $subscriber));
+//        foreach ($campaign->bunch->subscribers as $subscriber) {
+        for ($i = 0; $i < $campaign->bunch->subscribers->count(); $i++) {
+            $subscriber = $campaign->bunch->subscribers[$i];
+            $delay = intdiv($i, $mailsInBatch) * $batchDelay;
+            $mail = new CampaignMail($campaign, $subscriber);
+            $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
+            Mail::to($subscriber->email)->queue($mail);
+            Config::set('global.count', Config::get('global.count') + 1);
         }
         Session::flash('status', 'Campaign has been sent');
         return redirect()->route('campaign.index');
