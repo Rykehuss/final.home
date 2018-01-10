@@ -64,3 +64,14 @@ Route::get('send_test_email', function(){
 Route::get('/campaign_mail/{campaign},{subscriber}', function (App\Models\Campaign $campaign, \App\Models\Subscriber $subscriber) {
     return new App\Mail\CampaignMail($campaign, $subscriber);
 })->name('campaign_mail');
+
+Route::get('/campaign_mail_unsubscibe/{campaign},{subscriber}',
+    function (App\Models\Campaign $campaign, \App\Models\Subscriber $subscriber) {
+    if ($campaign->bunch->subscribers->contains($subscriber)) {
+        $campaign->bunch->subscribers()->detach($subscriber->id);
+        return view('bunch.unsubscribe_successfully', compact('campaign', 'subscriber'));
+    }
+    else {
+        return view('bunch.unsubscribe_unsuccessfully', compact('campaign', 'subscriber'));
+    }
+})->name('campaign_mail_unsubscribe');

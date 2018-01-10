@@ -39,9 +39,9 @@
         </td>
     </tr>
 </table>
-<div style="color:#000; font-size:14px; margin-top: 20px;">
+<div style="color:#8f8f8f; font-size:14px; margin-top: 20px;">
     <center>
-        {{--You can {{ link_to_route('unsubscribe', 'unsubscribe', [$campaign->template->id, $campaign->], ['target' => 'blank']) }} from the mailing list at any time.--}}
+        You can {{ link_to_route('campaign_mail_unsubscribe', 'unsubscribe', [$campaign, $subscriber]) }} from the mailing list at any time.
     </center>
 </div>
 </body>
