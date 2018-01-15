@@ -12,10 +12,12 @@
         <td align="center" bgcolor="#000">
             <p style="margin: 12px; color: #8f8f8f; font-size: 12px; font-family: Tahoma, Geneva, sans-serif;">
                 If the email is not displayed correctly, please follow this
+                {{--<a href="{{$link}}">link</a><br>--}}
                 {{ link_to_route('campaign_mail', 'link', [$campaign, $subscriber], ['target' => 'blank']) }}.<br>
                 Dear <strong>{{$subscriber->name}}</strong>! You received this email because user
                 <strong>{{$campaign->updatedBy->name}}</strong> has
                 included you in mailing list <strong>{{$campaign->bunch->name}}</strong>
+                <a href="{{ url('/') }}" style="text-decoration: none; text-transform: uppercase">UUU </a>
             </p>
         </td>
     </tr>
