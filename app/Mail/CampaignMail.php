@@ -25,6 +25,9 @@ class CampaignMail extends Mailable
     {
         $this->campaign = $campaign;
         $this->subscriber = $subscriber;
+
+        $this->from($this->campaign->updatedBy->email, $this->campaign->updatedBy->name);
+        $this->subject($this->campaign->name);
     }
 
     /**
@@ -34,8 +37,7 @@ class CampaignMail extends Mailable
      */
     public function build()
     {
-        return $this->from($this->campaign->updatedBy->email, $this->campaign->name)
-            ->view('emails.campaign_mail')
+        return $this->view('emails.campaign_mail')
             ->with([
                 'campaign' => $this->campaign,
                 'subscriber' => $this->subscriber,

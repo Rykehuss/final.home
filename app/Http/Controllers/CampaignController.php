@@ -121,7 +121,6 @@ class CampaignController extends Controller
         $batchDelay = config('custom.batch_delay');
 
         $this->authorize('send', $campaign);
-//        foreach ($campaign->bunch->subscribers as $subscriber) {
         for ($i = 0; $i < $campaign->bunch->subscribers->count(); $i++) {
             $subscriber = $campaign->bunch->subscribers[$i];
             $delay = intdiv($i, $mailsInBatch) * $batchDelay;
