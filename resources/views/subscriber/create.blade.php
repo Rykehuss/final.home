@@ -6,6 +6,13 @@
         </div>
     </div>
     <div class="panel-body">
+
+        @if(Session::has('error'))
+            <div class="alert alert-danger">
+                {{ Session::get('error') }}
+            </div>
+        @endif
+
         {!! Form::open(['route' => ['subscriber.store', $bunch_id], 'method' => 'POST']) !!}
         @include('subscriber._form')
         <div class="form-group">

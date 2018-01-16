@@ -19,6 +19,13 @@
     </div>
 
     <div class="panel-body">
+
+        @if(Session::has('error'))
+            <div class="alert alert-danger">
+                {{ Session::get('error') }}
+            </div>
+        @endif
+
         {!! Form::model($subscriber, ['route' => ['subscriber.update', $bunch_id, $subscriber], 'method' => 'PUT']) !!}
 
         @include('subscriber._form')

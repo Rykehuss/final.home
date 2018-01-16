@@ -6,6 +6,7 @@ use App\Models\Subscriber;
 use App\Models\Bunch;
 use App\Http\Requests\SubscriberRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class SubscriberController extends Controller
 {
@@ -45,13 +46,20 @@ class SubscriberController extends Controller
      */
     public function store(SubscriberRequest $request, $bunch_id)
     {
-        $subscriber = Subscriber::create($request->all());
-        if ($bunch_id) {
-            $subscriber->bunches()->attach($bunch_id);
-            $bunch = Bunch::find($bunch_id);
-            return redirect()->route('bunch.editSubscribers', compact('bunch'));
+        $email = $request->request->get('email');
+        if (Subscriber::where('email', $email)->count() == 0) {
+            $subscriber = Subscriber::create($request->all());
+            if ($bunch_id) {
+                $subscriber->bunches()->attach($bunch_id);
+                $bunch = Bunch::find($bunch_id);
+                return redirect()->route('bunch.editSubscribers', compact('bunch'));
+            }
+            return redirect()->route('subscriber.index', compact('bunch_id'));
         }
-        return redirect()->route('subscriber.index', compact('bunch_id'));
+        else {
+            Session::flash('error', 'This e-mail address is already in use by another sudscriber. To continue, enter another e-mail address.');
+            return view('subscriber.create', compact('bunch_id'));
+        }
     }
 
     /**
@@ -73,7 +81,6 @@ class SubscriberController extends Controller
      */
     public function edit($bunch_id, Subscriber $subscriber)
     {
-//        dd($subscriber);
         return view('subscriber.edit', compact('bunch_id', 'subscriber'));
     }
 
@@ -86,12 +93,20 @@ class SubscriberController extends Controller
      */
     public function update($bunch_id, Subscriber $subscriber, SubscriberRequest $request)
     {
-        $subscriber->update($request->all());
-        if ($bunch_id) {
-            $bunch = Bunch::find($bunch_id);
-            return redirect()->route('bunch.editSubscribers', compact('bunch'));
+        $email = $request->request->get('email');
+        if (Subscriber::where('email', $email)->count() == 0
+            || (Subscriber::where('email', $email)->count() == 1 &&  Subscriber::where('email', $email)->first()->id == $subscriber->id)) {
+            $subscriber->update($request->all());
+            if ($bunch_id) {
+                $bunch = Bunch::find($bunch_id);
+                return redirect()->route('bunch.editSubscribers', compact('bunch'));
+            }
+            return redirect()->route('subscriber.index', compact('bunch_id'));
         }
-        return redirect()->route('subscriber.index', compact('bunch_id'));
+        else {
+            Session::flash('error', 'This e-mail address is already in use by another sudscriber. To continue, enter another e-mail address.');
+            return view('subscriber.edit', compact('bunch_id', 'subscriber'));
+        }
     }
 
     /**
