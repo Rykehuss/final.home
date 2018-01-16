@@ -15,19 +15,22 @@ class CampaignMail extends Mailable
 
     protected $campaign;
     protected $subscriber;
+    protected $tag;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Campaign $campaign, Subscriber $subscriber)
+    public function __construct(Campaign $campaign, Subscriber $subscriber, $tag)
     {
         $this->campaign = $campaign;
         $this->subscriber = $subscriber;
+        $this->tag = $tag;
 
         $this->from($this->campaign->updatedBy->email, $this->campaign->updatedBy->name);
         $this->subject($this->campaign->name);
+
     }
 
     /**
@@ -37,10 +40,16 @@ class CampaignMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.campaign_mail')
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()->addTextHeader('X-Mailgun-Tag', $this->tag);
+        });
+
+        $this->view('emails.campaign_mail')
             ->with([
                 'campaign' => $this->campaign,
                 'subscriber' => $this->subscriber,
             ]);
+
+        return $this;
     }
 }

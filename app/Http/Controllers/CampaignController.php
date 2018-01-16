@@ -124,7 +124,9 @@ class CampaignController extends Controller
         for ($i = 0; $i < $campaign->bunch->subscribers->count(); $i++) {
             $subscriber = $campaign->bunch->subscribers[$i];
             $delay = intdiv($i, $mailsInBatch) * $batchDelay;
-            $mail = new CampaignMail($campaign, $subscriber);
+            $tag = "test2_tag";
+            $mail = new CampaignMail($campaign, $subscriber, $tag);
+
             $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
             Mail::to($subscriber->email)->queue($mail);
             Config::set('global.count', Config::get('global.count') + 1);
