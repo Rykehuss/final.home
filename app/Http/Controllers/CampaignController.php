@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Config;
 
 class CampaignController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
         $this->authorizeResource(Campaign::class);
     }
 
@@ -22,8 +21,7 @@ class CampaignController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $campaigns = Campaign::orderBy('id', 'asc')->owned()->get();
         return view('campaign.index', compact('campaigns'));
     }
@@ -33,19 +31,17 @@ class CampaignController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('campaign.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CampaignRequest $request)
-    {
+    public function store(CampaignRequest $request) {
         Campaign::create($request->all());
         return redirect()->route('campaign.index');
     }
@@ -53,22 +49,20 @@ class CampaignController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Campaign $campaign)
-    {
+    public function show(Campaign $campaign) {
         return view('campaign.show', compact('campaign'));
     }
 
     /**
      * Display campaign before sending.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function preview(Campaign $campaign)
-    {
+    public function preview(Campaign $campaign) {
         $this->authorize('view', $campaign);
         return view('campaign.preview', compact('campaign'));
     }
@@ -76,23 +70,21 @@ class CampaignController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Campaign $campaign)
-    {
+    public function edit(Campaign $campaign) {
         return view('campaign.edit', compact('campaign'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Campaign $campaign, CampaignRequest $request)
-    {
+    public function update(Campaign $campaign, CampaignRequest $request) {
         $campaign->update($request->all());
         return redirect()->route('campaign.index');
     }
@@ -100,11 +92,10 @@ class CampaignController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Campaign $campaign)
-    {
+    public function destroy(Campaign $campaign) {
         $campaign->delete();
         return redirect()->route('campaign.index');
     }
@@ -112,11 +103,10 @@ class CampaignController extends Controller
     /**
      * Send campaign template via e-mail.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function send(Campaign $campaign, Request $request)
-    {
+    public function send(Campaign $campaign, Request $request) {
         $mailsInBatch = config('custom.mails_in_batch');
         $batchDelay = config('custom.batch_delay');
 
@@ -135,4 +125,14 @@ class CampaignController extends Controller
         return redirect()->route('campaign.index');
     }
 
+    public function mailInfo() {
+        $domain = config("mailgun.domain");
+        $result = \Bogardo\Mailgun\Facades\Mailgun::api()->get($domain."/events", [
+            'limit' => 300,
+            'tags' => 'test2_tag',
+        ]);
+//        $last = $result->http_response_body->paging->next;
+//        $result = \Bogardo\Mailgun\Facades\Mailgun::api()->get($last);
+        dd($result);
+    }
 }

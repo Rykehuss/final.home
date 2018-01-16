@@ -75,3 +75,5 @@ Route::get('/campaign_mail_unsubscibe/{campaign},{subscriber}',
         return view('bunch.unsubscribe_unsuccessfully', compact('campaign', 'subscriber'));
     }
 })->name('campaign_mail_unsubscribe');
+
+Route::get('mail_info', 'CampaignController@mailInfo');

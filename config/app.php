@@ -188,6 +188,10 @@ return [
           */
          Unisharp\Ckeditor\ServiceProvider::class,
 
+        /*
+         * Bogardo\Mailgun
+         */
+        Bogardo\Mailgun\MailgunServiceProvider::class,
     ],
 
     /*
@@ -243,6 +247,10 @@ return [
          'Form' => Collective\Html\FormFacade::class,
          'Html' => Collective\Html\HtmlFacade::class,
 
+        /*
+         * Bogardo\Mailgun
+         */
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
     ],
 
 ];
