@@ -65,6 +65,9 @@ class Handler extends ExceptionHandler
             else if(strpos($requestUri, 'bunch') != FALSE) {
                 return redirect()->route('bunch.index');
             }
+            else if(strpos($requestUri, 'report') != FALSE) {
+                return redirect()->route('report.index');
+            }
         }
         return parent::render($request, $exception);
     }

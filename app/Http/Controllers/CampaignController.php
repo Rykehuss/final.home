@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\CampaignMail;
 use App\Models\Campaign;
+use App\Models\Report;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RecordController;
 use App\Http\Requests\CampaignRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -111,15 +114,19 @@ class CampaignController extends Controller
         $batchDelay = config('custom.batch_delay');
 
         $this->authorize('send', $campaign);
+
+        $report = ReportController::createNew($campaign);
+
         for ($i = 0; $i < $campaign->bunch->subscribers->count(); $i++) {
             $subscriber = $campaign->bunch->subscribers[$i];
             $delay = intdiv($i, $mailsInBatch) * $batchDelay;
-            $tag = "test2_tag";
-            $mail = new CampaignMail($campaign, $subscriber, $tag);
 
+            $mail = new CampaignMail($campaign, $subscriber, $report->id);
             $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
+
+            RecordController::createNew($mail);
+
             Mail::to($subscriber->email)->queue($mail);
-            Config::set('global.count', Config::get('global.count') + 1);
         }
         Session::flash('status', 'Campaign has been sent');
         return redirect()->route('campaign.index');
@@ -136,3 +143,5 @@ class CampaignController extends Controller
         dd($result);
     }
 }
+
+//php artisan queue:work database --queue=emails

@@ -28,6 +28,10 @@ class Campaign extends Model
         return $this->belongsTo(Template::class);
     }
 
+    public function reports(){
+        return $this->hasMany(Subscriber::class);
+    }
+
     public function scopeOwned($query){
         return $query->where('created_by', Auth::user()->id);
     }

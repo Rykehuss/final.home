@@ -5,7 +5,7 @@
             <a class="btn btn-info btn-xs col-md-1 col-sm-2 col-xs-2" href="{{route('campaign.index')}}">
                 <i class="fa fa-backward" aria-hidden="true"></i> Back
             </a>
-            <div class="centered-child col-md-9 col-sm-7 col-xs-6">Template: <b>{{$campaign->name}}</b></div>
+            <div class="centered-child col-md-9 col-sm-7 col-xs-6">Campaign: <b>{{$campaign->name}}</b></div>
             <div class="col-md-2 col-sm-3 col-xs-4">
                 <div class="pull-right">
                     {{Form::open(['class' => 'confirm-delete', 'route' => ['campaign.destroy', $campaign], 'method' => 'DELETE'])}}

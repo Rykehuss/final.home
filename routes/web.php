@@ -48,6 +48,11 @@ Route::group(['middleware' => ['auth']], function (){
     Route::resource('campaign', 'CampaignController');
     Route::get('campaign/{campaign}/preview', 'CampaignController@preview')->name('campaign.preview');
     Route::get('campaign/{campaign}/send', 'CampaignController@send')->name('campaign.send');
+
+    // Report
+    Route::get('report', 'ReportController@index')->name('report.index');
+    Route::get('report/{report}', 'ReportController@show')->name('report.show');
+
 });
 
 

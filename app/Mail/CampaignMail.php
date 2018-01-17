@@ -13,16 +13,19 @@ class CampaignMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $campaign;
-    protected $subscriber;
-    protected $tag;
+    public $campaign;
+    public $subscriber;
+    public $tag;
 
     /**
      * Create a new message instance.
      *
+     * @param Campaign $campaign
+     * @param Subscriber $subscriber
+     * @param string $tag
      * @return void
      */
-    public function __construct(Campaign $campaign, Subscriber $subscriber, $tag)
+    public function __construct(Campaign $campaign, Subscriber $subscriber, $tag = 0)
     {
         $this->campaign = $campaign;
         $this->subscriber = $subscriber;

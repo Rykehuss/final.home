@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Campaign::class => \App\Policies\CampaignPolicy::class,
         \App\Models\Bunch::class => \App\Policies\BunchPolicy::class,
         \App\Models\Subscriber::class => \App\Policies\SubscriberPolicy::class,
+        \App\Models\Report::class => \App\Policies\ReportPolicy::class,
     ];
 
     /**

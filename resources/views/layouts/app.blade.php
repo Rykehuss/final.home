@@ -47,6 +47,7 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                            <li><a href="{{ url('/report') }}">Reports</a></li>
                             <li><a href="{{ url('/campaign') }}">Campaigns</a></li>
                             <li><a href="{{ url('/template') }}">Templates</a></li>
                             <li><a href="{{ url('/bunch') }}">Bunches</a></li>
