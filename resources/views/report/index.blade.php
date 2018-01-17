@@ -21,17 +21,19 @@
                         <table class="table table-bordered table-responsive table-striped table-hover">
                             <tr>
                                 <th width="10%">id</th>
-                                <th width="40%">Campaign</th>
-                                <th width="40%">Date</th>
-                                <th width="10%">action</th>
+                                <th width="30%">Campaign</th>
+                                <th width="30%">Date</th>
+                                <th width="10%">Mails</th>
+                                <th width="20%">Action</th>
                             </tr>
                             @foreach ($reports as $model)
                                 <tr link="{{"report/".$model->id}}" class="clickable_row as-link">
                                     <td>{{$model->id}}</td>
                                     <td>{{$model->campaign->name}}</td>
                                     <td>{{$model->created_at}}</td>
-                                    <td>
-                                        {{ link_to_route('report.show', 'Info', [$model], ['class' => 'btn btn-info btn-xs']) }}
+                                    <td>{{$model->records->count()}}</td>
+                                    <td class="no-padding">
+                                        {{ link_to_route('report.show', 'Detailed', [$model], ['class' => 'btn btn-info btn-block']) }}
                                     </td>
                                 </tr>
                             @endforeach

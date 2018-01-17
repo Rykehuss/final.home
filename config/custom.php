@@ -14,4 +14,6 @@ return [
 
     'batch_delay' => '1200',
 
+    'mails_per_day' => '300',
+
 ];

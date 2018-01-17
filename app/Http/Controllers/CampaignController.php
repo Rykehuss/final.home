@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\CampaignMail;
 use App\Models\Campaign;
 use App\Models\Report;
+use App\Models\Record;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RecordController;
 use App\Http\Requests\CampaignRequest;
@@ -110,33 +111,48 @@ class CampaignController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function send(Campaign $campaign, Request $request) {
-        $mailsInBatch = config('custom.mails_in_batch');
-        $batchDelay = config('custom.batch_delay');
-
         $this->authorize('send', $campaign);
 
-        $report = ReportController::createNew($campaign);
+        $mailsInBatch = config('custom.mails_in_batch');
+        $batchDelay = config('custom.batch_delay');
+        $mailsPerDay = config('custom.mails_per_day');
 
-        for ($i = 0; $i < $campaign->bunch->subscribers->count(); $i++) {
-            $subscriber = $campaign->bunch->subscribers[$i];
-            $delay = intdiv($i, $mailsInBatch) * $batchDelay;
+        $subscribers = $campaign->bunch->subscribers;
+        $mailsSendedToday = Record::whereDate('created_at', '=', date('Y-m-d'))->get()->count();
+        $mailsPerDayLeft = $mailsPerDay - $mailsSendedToday;
 
-            $mail = new CampaignMail($campaign, $subscriber, $report->id);
-            $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
-
-            RecordController::createNew($mail);
-
-            Mail::to($subscriber->email)->queue($mail);
+        if ($mailsPerDayLeft < $subscribers->count()) {
+            Session::flash('error', "Campaign can not be sent. Campain contain {$subscribers->count()} subscribers, but You may send only {$mailsPerDayLeft} mails today. (Daily limit: {$mailsPerDay} mails");
+            return redirect()->route('campaign.index');
         }
-        Session::flash('status', 'Campaign has been sent');
-        return redirect()->route('campaign.index');
+        else {
+            $report = ReportController::createNew($campaign);
+
+            for ($i = 0; $i < $subscribers->count(); $i++) {
+                $subscriber = $subscribers[$i];
+                $delay = intdiv($i, $mailsInBatch) * $batchDelay;
+
+                $mail = new CampaignMail($campaign, $subscriber, $report->id);
+                $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
+
+                RecordController::createNew($mail);
+
+                Mail::to($subscriber->email)->queue($mail);
+            }
+            $mailsPerDayLeft -= $subscribers->count();
+            Session::flash('status', "Campaign has been sent. You may send {$mailsPerDayLeft} mails more today. (Daily limit: {$mailsPerDay} mails)");
+            return redirect()->route('campaign.index');
+        }
     }
 
     public function mailInfo() {
         $domain = config("mailgun.domain");
         $result = \Bogardo\Mailgun\Facades\Mailgun::api()->get($domain."/events", [
-            'limit' => 300,
-            'tags' => 'test2_tag',
+            'limit' => 50,
+//            'tags' => '38',
+//            'to' => 'dmtrggl@gmail.com',
+//            'event' => 'opened',
+            'message-id' => 'b6d1014937ca07a01dc8ae792232dbbe@swift.generated',
         ]);
 //        $last = $result->http_response_body->paging->next;
 //        $result = \Bogardo\Mailgun\Facades\Mailgun::api()->get($last);

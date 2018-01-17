@@ -6,3 +6,7 @@
     cursor: pointer;
     transition: 1s;
 }
+
+.no-padding {
+    padding: 0 !important;
+}
