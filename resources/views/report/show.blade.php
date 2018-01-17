@@ -21,5 +21,49 @@
                 </tr>
             @endforeach
         </table>
+
+        <div><strong>Records:</strong></div>
+        <table class="table table-bordered table-responsive">
+            <tr>
+                <th width="5%">Id</th>
+                <th width="30%">Recipient</th>
+                <th>Status</th>
+            </tr>
+            @foreach ($records as $record)
+                <?php
+                    $status = "Error";
+                    if ($record->failed) {
+                        $status = "Failed";
+                    }
+                    else if ($record->delivered) {
+                        $status = "Delivered";
+                    }
+                    else if ($record->accepted) {
+                        $status = "Accepted";
+                    }
+                    else if ($record->sended) {
+                        $status = "Sended";
+                    }
+                    else if ($record->queued) {
+                        $status = "Queued";
+                    }
+                    if ($status != "Error") {
+                        if ($record->opened) {
+                            $status .= " | Opened";
+                        }
+                        if ($record->unsubscribed) {
+                            $status .= " | Unsubscribed";
+                        }
+                    }
+                ?>
+                <tr>
+                    <td>{{$record->id}}</td>
+                    <td>{{$record->email}}</td>
+                    <td>{{$status}}</td>
+                </tr>
+            @endforeach
+        </table>
+
     </div>
+
 @endsection

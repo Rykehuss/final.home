@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use App\Models\Campaign;
+use App\Models\Record;
 
 class ReportController extends Controller
 {
@@ -41,6 +42,12 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         $this->authorize('view', $report);
-        return view('report.show', compact('report'));
+
+        $records = Record::where('report_id', $report->id)->get();
+
+        //        updateRecords($records);
+
+
+        return view('report.show', compact('report', 'records'));
     }
 }
