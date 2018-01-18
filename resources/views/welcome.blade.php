@@ -85,6 +85,7 @@
                 </div>
 
                 <div class="links">
+                    <a href="{{ url('/report') }}">Reports</a>
                     <a href="{{ url('/campaign') }}">Campaigns</a>
                     <a href="{{ url('/template') }}">Templates</a>
                     <a href="{{ url('/bunch') }}">Bunches</a>

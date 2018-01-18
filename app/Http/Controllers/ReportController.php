@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Report;
 use App\Models\Campaign;
 use App\Models\Record;
+use App\Models\Subscriber;
+use App\Http\Requests\UnsubscribeRequest;
 
 class ReportController extends Controller
 {
@@ -80,5 +82,28 @@ class ReportController extends Controller
         $records = Record::where('report_id', $report->id)->get();
 
         return view('report.show', compact('report', 'records'));
+    }
+
+    public static function unsubscribe(Report $report, Subscriber $subscriber) {
+        $campaign = $report->campaign;
+        if ($campaign->bunch->subscribers->contains($subscriber)) {
+            return view('report.unsubscribe_reason', compact('report', 'subscriber'));
+        } else {
+            return view('bunch.unsubscribe_unsuccessfully', compact('campaign', 'subscriber'));
+        }
+    }
+
+    public static function unsubscribeStore(UnsubscribeRequest $request, Report $report, Subscriber $subscriber) {
+        $reason = $request->input('reason');
+
+        $record = Record::where('report_id', $report->id)->where('email', $subscriber->email)->get()->first();
+        $record->unsubscribed = true;
+        $record->unsubscribe_reason = $reason;
+        $record->save();
+
+        $campaign = $report->campaign;
+        $campaign->bunch->subscribers()->detach($subscriber->id);
+        return view('bunch.unsubscribe_successfully', compact('campaign', 'subscriber'));
+
     }
 }

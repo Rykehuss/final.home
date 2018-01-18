@@ -132,7 +132,7 @@ class CampaignController extends Controller
                 $subscriber = $subscribers[$i];
                 $delay = intdiv($i, $mailsInBatch) * $batchDelay;
 
-                $mail = new CampaignMail($campaign, $subscriber, $report->id);
+                $mail = new CampaignMail($campaign, $subscriber, $report);
                 $mail->onConnection('database')->onQueue('emails')->delay(now()->addSeconds($delay));
 
                 RecordController::createNew($mail);

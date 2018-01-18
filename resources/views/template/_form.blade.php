@@ -2,6 +2,6 @@
     {!!Form::label('name', 'Name') !!}
     {!!Form::text('name', null, ['class' => 'form-control']) !!}
     {!!Form::label('content', 'Content') !!}
-    {!!Form::textarea('content', null, ['class' => 'form-control']) !!}
+    {!!Form::textarea('content', null, ['class' => 'form-control ckeditor']) !!}
 </div>
 

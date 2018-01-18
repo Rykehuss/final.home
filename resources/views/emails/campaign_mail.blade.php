@@ -1,4 +1,24 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?php
+    if ($tag) {
+        $unsubscribeLink = route('report.unsubscribe', [$tag, $subscriber]);
+        $mailLink = route('campaign_mail', [$tag, $subscriber]);
+    }
+    else {
+        $unsubscribeLink = "http://localhost";
+        $mailLink = url()->current();
+    }
+
+    $content = $campaign->template->content;
+    $content = str_replace('{F_NAME}', $subscriber->name, $content);
+    $content = str_replace('{L_NAME}', $subscriber->surname, $content);
+    $unsReplaced = 0;
+    $content = str_replace('{UNSUBSCRIBE}', $unsubscribeLink, $content, $unsReplaced);
+
+
+?>
+
+
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -12,7 +32,7 @@
         <td align="center" bgcolor="#000">
             <p style="margin: 12px; color: #8f8f8f; font-size: 12px; font-family: Tahoma, Geneva, sans-serif;">
                 If the email is not displayed correctly, please follow this
-                {{ link_to_route('campaign_mail', 'link', [$campaign, $subscriber], ['target' => 'blank']) }}.<br>
+                <a href="{{$mailLink}}" target="blank">link</a>.<br>
                 Dear <strong>{{$subscriber->name}}</strong>! You received this email because user
                 <strong>{{$campaign->updatedBy->name}}</strong> has
                 included you in mailing list <strong>{{$campaign->bunch->name}}</strong>
@@ -21,12 +41,6 @@
     </tr>
     <tr align="center" valign="top" bgcolor="#000000">
         <td align="center" valign="middle" style="padding: 20px 0;">
-            <?php
-                $content = $campaign->template->content;
-                $content = str_replace('{F_NAME}', $subscriber->name, $content);
-                $content = str_replace('{L_NAME}', $subscriber->surname, $content);
-//                $content = str_replace('{UNSUBSCRIBE}', $subscriber->surname, $content);
-            ?>
             {!! $content !!}
         </td>
     </tr>
@@ -39,10 +53,12 @@
         </td>
     </tr>
 </table>
-<div style="color:#8f8f8f; font-size:14px; margin-top: 20px;">
-    <center>
-        You can {{ link_to_route('campaign_mail_unsubscribe', 'unsubscribe', [$campaign, $subscriber]) }} from the mailing list at any time.
-    </center>
-</div>
+@if($unsReplaced == 0)
+    <div style="color:#8f8f8f; font-size:14px; margin-top: 20px;">
+        <center>
+            You can <a href="{{$unsubscribeLink}}">unsubscribe</a> from the mailing list at any time.
+        </center>
+    </div>
+@endif
 </body>
 </html>

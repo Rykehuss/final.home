@@ -66,7 +66,7 @@
                     </iframe>
                     <br>
                     @if ($campaign->bunch->subscribers->count())
-                    {{ link_to_route('campaign_mail', 'Show as Mail', [$campaign, $campaign->bunch->subscribers[0]], ['class' => 'btn btn-success btn-md']) }}
+                    {{ link_to_route('campaign_mail_preview', 'Show as Mail', [$campaign, $campaign->bunch->subscribers[0]], ['class' => 'btn btn-success btn-md']) }}
                     @else
                     If you want preview mail as HTML-page add at least 1 subscriber to bunch.
                     @endif

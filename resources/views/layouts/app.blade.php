@@ -86,7 +86,7 @@
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
     <script>
-        $('textarea').ckeditor();
+        $('.ckeditor').ckeditor();
 
         $(".subscriber-delete").on("submit", function(){
             return confirm("Do you want to delete this subscriber?\n" +

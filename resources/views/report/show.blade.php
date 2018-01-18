@@ -119,7 +119,12 @@
                 <tr>
                     <td>{{$record->id}}</td>
                     <td>{{$record->email}}</td>
-                    <td>{{$status}}</td>
+                    <td>
+                        {{$status}}
+                        @if($record->unsubscribed)
+                            <button onclick='alert("{{$record->unsubscribe_reason}}")' class="btn btn-info pull-right">Unsubscribe reason</button>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </table>

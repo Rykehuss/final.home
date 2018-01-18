@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Campaign;
+use App\Models\Report;
 
 class CampaignMail extends Mailable
 {
@@ -25,15 +26,21 @@ class CampaignMail extends Mailable
      * @param string $tag
      * @return void
      */
-    public function __construct(Campaign $campaign, Subscriber $subscriber, $tag = 0)
+    public function __construct(Campaign $campaign, Subscriber $subscriber, Report $report = null)
     {
-        $this->campaign = $campaign;
+        if ($report) {
+            $this->campaign = $report->campaign;
+            $this->tag = $report->id;
+
+        }
+        else {
+            $this->campaign = $campaign;
+            $this->tag = 0;
+        }
         $this->subscriber = $subscriber;
-        $this->tag = $tag;
 
         $this->from($this->campaign->updatedBy->email, $this->campaign->updatedBy->name);
         $this->subject($this->campaign->name);
-
     }
 
     /**
@@ -51,6 +58,7 @@ class CampaignMail extends Mailable
             ->with([
                 'campaign' => $this->campaign,
                 'subscriber' => $this->subscriber,
+                'tag' => $this->tag,
             ]);
 
         return $this;
