@@ -181,12 +181,12 @@ return [
         /*
          * Laravel Collective
          */
-         Collective\Html\HtmlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
          
-         /*
-          * Unisharp CKEditor
-          */
-         Unisharp\Ckeditor\ServiceProvider::class,
+        /*
+         * Unisharp CKEditor
+         */
+        Unisharp\Ckeditor\ServiceProvider::class,
 
         /*
          * Bogardo\Mailgun
@@ -244,8 +244,8 @@ return [
         /*
          * Laravel Collective
          */
-         'Form' => Collective\Html\FormFacade::class,
-         'Html' => Collective\Html\HtmlFacade::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
 
         /*
          * Bogardo\Mailgun

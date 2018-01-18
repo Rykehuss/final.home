@@ -78,10 +78,6 @@
             </tr>
         </table>
 
-
-
-
-
         <div><strong>Records:</strong></div>
         <table class="table table-bordered table-responsive">
             <tr>
@@ -128,7 +124,6 @@
                 </tr>
             @endforeach
         </table>
-
     </div>
 
 @endsection

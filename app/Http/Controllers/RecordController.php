@@ -11,6 +11,7 @@ class RecordController extends Controller
     /**
      * Create a new record.
      *
+     * @param CampaignMail $mail
      * @return \App\Models\Record
      */
     public static function createNew(CampaignMail $mail)

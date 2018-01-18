@@ -75,7 +75,6 @@
             </tr>
         </table>
         {!! Form::close() !!}
-
     </div>
 
     @include('layouts.validation_errors')

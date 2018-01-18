@@ -23,7 +23,7 @@ class CampaignMail extends Mailable
      *
      * @param Campaign $campaign
      * @param Subscriber $subscriber
-     * @param string $tag
+     * @param Report $report
      * @return void
      */
     public function __construct(Campaign $campaign, Subscriber $subscriber, Report $report = null)
@@ -46,7 +46,7 @@ class CampaignMail extends Mailable
     /**
      * Build the message.
      *
-     * @return $this
+     * @return CampaignMail
      */
     public function build()
     {

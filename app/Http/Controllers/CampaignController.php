@@ -12,7 +12,6 @@ use App\Http\Requests\CampaignRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Config;
 
 class CampaignController extends Controller
 {
@@ -42,7 +41,7 @@ class CampaignController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\CampaignRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(CampaignRequest $request) {
@@ -53,7 +52,7 @@ class CampaignController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  Campaign $campaign
      * @return \Illuminate\Http\Response
      */
     public function show(Campaign $campaign) {
@@ -63,8 +62,9 @@ class CampaignController extends Controller
     /**
      * Display campaign before sending.
      *
-     * @param  int $id
+     * @param  Campaign $campaign
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function preview(Campaign $campaign) {
         $this->authorize('view', $campaign);
@@ -74,7 +74,7 @@ class CampaignController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  Campaign $campaign
      * @return \Illuminate\Http\Response
      */
     public function edit(Campaign $campaign) {
@@ -84,8 +84,8 @@ class CampaignController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  Campaign $campaign
+     * @param  \App\Http\Requests\CampaignRequest $request
      * @return \Illuminate\Http\Response
      */
     public function update(Campaign $campaign, CampaignRequest $request) {
@@ -96,8 +96,9 @@ class CampaignController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  Campaign $campaign
      * @return \Illuminate\Http\Response
+     * @throws
      */
     public function destroy(Campaign $campaign) {
         $campaign->delete();
@@ -107,10 +108,11 @@ class CampaignController extends Controller
     /**
      * Send campaign template via e-mail.
      *
-     * @param  int $id
+     * @param  Campaign $campaign
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function send(Campaign $campaign, Request $request) {
+    public function send(Campaign $campaign) {
         $this->authorize('send', $campaign);
 
         $mailsInBatch = config('custom.mails_in_batch');

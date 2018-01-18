@@ -55,17 +55,7 @@ Route::group(['middleware' => ['auth']], function (){
 
 });
 
-
-// Utility
-Route::get('send_test_email', function(){
-    Mail::raw('Test e-mail', function($message)
-    {
-        $message->subject('I send e-mail!');
-        $message->from('nowhere@gmail.com', 'Unknown place');
-        $message->to(['dmtrggl@gmail.com', 'maxim.gontar@gmail.com']);
-    });
-});
-
+// Mail as HTML Page
 Route::get('/campaign_mail/{report},{subscriber}', function (\App\Models\Report $report, \App\Models\Subscriber $subscriber) {
     return new App\Mail\CampaignMail($report->campaign, $subscriber, $report);
 })->name('campaign_mail');
@@ -74,20 +64,18 @@ Route::get('/campaign_mail_preview/{campaign},{subscriber}', function (App\Model
     return new App\Mail\CampaignMail($campaign, $subscriber, null);
 })->name('campaign_mail_preview');
 
-
-//Route::get('/campaign_mail_unsubscribe/{report},{subscriber}',
-//    function (App\Models\Report $report, \App\Models\Subscriber $subscriber) {
-//    $campaign = $report->campaign;
-//    if ($campaign->bunch->subscribers->contains($subscriber)) {
-//        $campaign->bunch->subscribers()->detach($subscriber->id);
-//        return view('bunch.unsubscribe_successfully', compact('campaign', 'subscriber'));
-//    }
-//    else {
-//        return view('bunch.unsubscribe_unsuccessfully', compact('campaign', 'subscriber'));
-//    }
-//})->name('campaign_mail_unsubscribe');
-
+// Unsubscribe
 Route::get('/campaign_mail_unsubscribe/{report},{subscriber}', 'ReportController@unsubscribe')->name('report.unsubscribe');
 Route::post('/campaign_mail_unsubscribe_store/{report},{subscriber}', 'ReportController@unsubscribeStore')->name('report.unsubscribeStore');
 
+// Utility
 Route::get('mail_info', 'CampaignController@mailInfo');
+
+Route::get('send_test_email', function(){
+    Mail::raw('Test e-mail', function($message)
+    {
+        $message->subject('I send e-mail!');
+        $message->from('nowhere@ukr.net', 'Unknown place');
+        $message->to(['dmtrggl@gmail.com']);
+    });
+});

@@ -114,6 +114,7 @@ class SubscriberController extends Controller
      *
      * @param  Subscriber $subscriber
      * @return \Illuminate\Http\Response
+     * @throws
      */
     public function destroy($bunch_id, Subscriber $subscriber)
     {
@@ -134,9 +135,11 @@ class SubscriberController extends Controller
     /**
      * Remove subscriber from specified bunch.
      *
+     * @param int $bunch_id
      * @param  Subscriber    $subscriber
      * @param  Bunch    $bunch
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function removeFromBunch($bunch_id, Subscriber $subscriber, Bunch $bunch)
     {
@@ -148,9 +151,11 @@ class SubscriberController extends Controller
     /**
      * Add the specified subscriber to bunch.
      *
+     * @param int $bunch_id
      * @param  Subscriber    $subscriber
      * @param  \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function addToBunch($bunch_id, Subscriber $subscriber, Request $request)
     {

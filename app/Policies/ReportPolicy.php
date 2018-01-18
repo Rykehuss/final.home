@@ -14,7 +14,7 @@ class ReportPolicy
      * Determine whether the user can view the campaign.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Campaign  $campaign
+     * @param  \App\Models\Report  $report
      * @return mixed
      */
     public function view(User $user, Report $report)

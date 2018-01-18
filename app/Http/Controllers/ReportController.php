@@ -23,6 +23,11 @@ class ReportController extends Controller
         return view('report.index', compact('reports'));
     }
 
+    /**
+     * Update statuses for report's records.
+     *
+     * @param Report $report
+     */
     private function updateReport(Report $report) {
         $records = Record::where('report_id', $report->id)->get();
         $domain = config("mailgun.domain");
@@ -55,9 +60,10 @@ class ReportController extends Controller
     }
 
     /**
-     * Create a new report.
+     * Create and return new report.
      *
-     * @return \Illuminate\Http\Response
+     * @param Campaign $campaign
+     * @return Report
      */
     public static function createNew(Campaign $campaign)
     {
@@ -72,6 +78,7 @@ class ReportController extends Controller
      *
      * @param  Report  $report
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Report $report)
     {
@@ -84,6 +91,13 @@ class ReportController extends Controller
         return view('report.show', compact('report', 'records'));
     }
 
+    /**
+     * Handle unsubscribe request
+     *
+     * @param  Report  $report
+     * @param Subscriber $subscriber
+     * @return \Illuminate\Http\Response
+     */
     public static function unsubscribe(Report $report, Subscriber $subscriber) {
         $campaign = $report->campaign;
         if ($campaign->bunch->subscribers->contains($subscriber)) {
@@ -93,6 +107,14 @@ class ReportController extends Controller
         }
     }
 
+    /**
+     * Store unsubscribe data
+     *
+     * @param UnsubscribeRequest $request
+     * @param  Report  $report
+     * @param Subscriber $subscriber
+     * @return \Illuminate\Http\Response
+     */
     public static function unsubscribeStore(UnsubscribeRequest $request, Report $report, Subscriber $subscriber) {
         $reason = $request->input('reason');
 
@@ -104,6 +126,5 @@ class ReportController extends Controller
         $campaign = $report->campaign;
         $campaign->bunch->subscribers()->detach($subscriber->id);
         return view('bunch.unsubscribe_successfully', compact('campaign', 'subscriber'));
-
     }
 }

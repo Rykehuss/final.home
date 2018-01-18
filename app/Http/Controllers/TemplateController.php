@@ -86,6 +86,7 @@ class TemplateController extends Controller
      *
      * @param  Template $template
      * @return \Illuminate\Http\Response
+     * @throws
      */
     public function destroy(Template $template)
     {

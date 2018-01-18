@@ -74,8 +74,9 @@ class BunchController extends Controller
     /**
      * Show the form for subscribers editing.
      *
-     * @param  Bunch    $bunch
+     * @param  int    $bunch_id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function editSubscribers($bunch_id)
     {
@@ -111,6 +112,7 @@ class BunchController extends Controller
      *
      * @param  Bunch    $bunch
      * @return \Illuminate\Http\Response
+     * @throws
      */
     public function destroy(Bunch $bunch)
     {
@@ -136,6 +138,7 @@ class BunchController extends Controller
      * @param  Bunch    $bunch
      * @param  Subscriber    $subscriber
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function removeSubscriber(Bunch $bunch, Subscriber $subscriber)
     {
@@ -150,6 +153,7 @@ class BunchController extends Controller
      * @param  Bunch    $bunch
      * @param  \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function addSubscriber(Bunch $bunch, Request $request)
     {
