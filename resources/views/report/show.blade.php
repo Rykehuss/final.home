@@ -88,11 +88,11 @@
             @foreach ($records as $record)
                 <?php
                     $status = "Error";
-                    if ($record->failed) {
-                        $status = "Failed";
-                    }
-                    else if ($record->delivered) {
+                    if ($record->delivered) {
                         $status = "Delivered";
+                    }
+                    else if ($record->failed) {
+                        $status = "Failed";
                     }
                     else if ($record->accepted) {
                         $status = "Accepted";
